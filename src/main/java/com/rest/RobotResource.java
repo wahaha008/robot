@@ -1,4 +1,4 @@
-package com.robot;
+package com.rest;
 
 import com.conf.Config;
 import com.util.Msg;
