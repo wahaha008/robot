@@ -16,10 +16,10 @@ public class EmbeddedTomcatConfig implements WebServerFactoryCustomizer<Configur
             @Override
             public void customize(Connector connector) {
                 Http11NioProtocol protocol = (Http11NioProtocol) connector.getProtocolHandler();
-                protocol.setMaxConnections(200);
-                protocol.setMaxThreads(200);
+                protocol.setMaxConnections(201);
+                protocol.setMaxThreads(201);
                 protocol.setSelectorTimeout(3000);
-                protocol.setConnectionTimeout(5000);
+                protocol.setConnectionTimeout(6000);
                 protocol.setPort(Integer.valueOf(Config.getValue("port")));
             }
         });
