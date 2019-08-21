@@ -1,7 +1,9 @@
 package com.rest;
 
 import com.conf.Config;
+import com.util.Ikanalyzer;
 import com.util.Msg;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
@@ -21,26 +23,36 @@ import java.util.Map;
  * @Create Date Time: 2019-07-25 11:12
  * @Update Date Time:
  * @see
+ * // TODO： 添加天气接口
  */
 @RestController
 @RequestMapping("/robot")
 @CrossOrigin(origins = "*")
 @Component
+@Slf4j
 public class RobotResource implements CommandLineRunner {
 
     Map<String, String> answers = new HashMap<>();
 
+    /**
+     * 问答接口
+     * @param question 请求的问句
+     * @return  返回对应问句的回答列表
+     */
     @GetMapping("/answer/{question}")
     @ResponseBody
     public String getAnswer(@PathVariable("question") String question) {
 
-        List<String> list = new ArrayList<>();
+        List<String> list = new    ArrayList<>();
         Map<String, List<String>> response = new HashMap<>();
 
-        //TODO ： 分词提取关键词
+        //TODO ： 分词提取关键词、语料问答训练
+        String result = Ikanalyzer.toSegmenter(question)
+                .split("|")
+                [0];
 
         answers.forEach((k, v) -> {
-            if (k.contains(question)) {
+            if (k.contains(question.replaceAll("？", ""))) {
                 list.add(v);
                 response.put(question, list);
             }
@@ -49,11 +61,16 @@ public class RobotResource implements CommandLineRunner {
         return new Msg<>(Msg.SUCCESS, response).toJson();
     }
 
+    /**
+     * 预读文件，启动服务时候就调用次方法，加快响应时间
+     * @param args
+     * @throws Exception
+     */
     @Override
     public void run(String... args) throws Exception {
 
-        String path = Config.getFile("path-dev");
-//        String path = "N:\\语料\\raw_chat_corpus\\chinese_chatbot_corpus-master\\chinese_chatbot_corpus-master\\clean_chat_corpus\\xiaohuangji.tsv";
+//        String path = Config.getFile("path-dev");
+        String path = "N:\\语料\\raw_chat_corpus\\chinese_chatbot_corpus-master\\chinese_chatbot_corpus-master\\clean_chat_corpus\\xiaohuangji.tsv";
         String line = null;
         BufferedReader br = null;
         Map<String, String> map = new HashMap<>();
@@ -72,5 +89,6 @@ public class RobotResource implements CommandLineRunner {
         }
 
         this.answers = map;
+        log.info("the all answers size is {}.", answers.size());
     }
 }

@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 public class Config {
 
     public static String getValue(String key) {
-        ResourceBundle bundle = ResourceBundle.getBundle("conf/cnm");
+        ResourceBundle bundle = ResourceBundle.getBundle("conf/robot");
         String valueCN = null;
         try {
             valueCN = new String(bundle.getString(key).getBytes("ISO-8859-1"), "UTF8");

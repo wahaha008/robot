@@ -20,7 +20,7 @@ public class EmbeddedTomcatConfig implements WebServerFactoryCustomizer<Configur
                 protocol.setMaxThreads(200);
                 protocol.setSelectorTimeout(3000);
                 protocol.setConnectionTimeout(5000);
-                protocol.setPort(9999);
+                protocol.setPort(Integer.valueOf(Config.getValue("port")));
             }
         });
     }
